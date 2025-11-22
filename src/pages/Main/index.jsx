@@ -27,8 +27,18 @@ export default function Main() {
         </h1>
         <Search />
         <InsertProductB />
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-left w-full">
+          สินค้าประมูลวันนี้
+        </h2>
         <Carousel2 cards={cards} />
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-left w-full">
+          ห้องประมูล
+        </h2>
         <Carousel cards={cards} />
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-left w-full">
+          สินค้า
+        </h2>
+        
         <Carousel3 cards={cards} />
 
       
