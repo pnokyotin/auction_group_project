@@ -1,10 +1,10 @@
 
 import Search from "../../components/form/search";
-import Carousel from '../../components/Carousel';
-import Carousel2 from '../../components/Carousel2';
-import Carousel3 from '../../components/Carousel3';
+import Carousel1 from '../../components/Carousel/Carousel1';
+import Carousel2 from '../../components/Carousel/Carousel2';
+import Carousel3 from '../../components/Carousel/Carousel3';
 
-import InsertProductB from "../../components/InsertProduct_botton";  
+import InsertProductB from "../../components/button/InsertProduct_botton";  
 import useProducts from '../../hooks/UseProducts';
 
 export default function Main() {
@@ -22,7 +22,7 @@ export default function Main() {
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1344px]  ">
       <div className="flex flex-col gap-8 p-4 sm:p-6 md:p-8 min-h-80 justify-center items-center">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mt-20 ">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mt-30 ">
           Welcome to Main Page
         </h1>
         <Search />
@@ -34,12 +34,11 @@ export default function Main() {
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-left w-full">
           ห้องประมูล
         </h2>
-        <Carousel cards={cards} />
+        <Carousel3 cards={cards} />
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-left w-full">
           สินค้า
         </h2>
-        
-        <Carousel3 cards={cards} />
+        <Carousel1 cards={cards} />
 
       
       </div>

@@ -1,6 +1,5 @@
 export default function SearchBoxSmall() {
   return (
-
     <div className="w-full max-w-2xl mx-auto mt-10 px-2">
       <label htmlFor="search" className="sr-only">
         Search
@@ -10,7 +9,7 @@ export default function SearchBoxSmall() {
         {/* Icon */}
         <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
           <svg
-            className="w-4 h-4 text-gray-400"
+            className="w-4 h-4 text-white/70"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -29,13 +28,13 @@ export default function SearchBoxSmall() {
           type="text"
           id="search"
           placeholder="Search..."
-          className="block w-full pl-8 pr-20 py-2 text-sm text-gray-700 bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+          className="block w-full pl-8 pr-20 py-2 text-sm text-white placeholder-white/70 bg-white/10 border border-white/30 rounded-md backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-[#3BACE2] focus:border-[#B936EE]"
         />
 
         {/* Button */}
         <button
           type="button"
-          className="absolute right-1 top-1/2 transform -translate-y-1/2 px-3 py-1 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-400"
+          className="absolute right-1 top-1/2 transform -translate-y-1/2 px-3 py-1 bg-gradient-to-r from-[#B936EE] via-[#3BACE2] to-[#FF56F6] text-white rounded-md text-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#FF56F6]"
         >
           Search
         </button>

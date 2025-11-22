@@ -1,0 +1,45 @@
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import Card from '../../Card';
+import { Navigation } from 'swiper/modules';
+
+export default function CardCarousel({ cards }) {
+  return (
+    <div className="w-full py-4 px-2 bg-white/10 backdrop-blur-md rounded-lg">
+      <Swiper
+        spaceBetween={8}
+        slidesPerView= {1.2}     // มือถือ    
+        grabCursor={true}
+        modules={[Navigation]}
+        navigation={{
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        }}
+        observer={true}          // 🔹 ตรวจจับ container size
+        observeParents={true}    // 🔹 ตรวจสอบ parent container ด้วย
+        onSwiper={(swiper) => swiper.update()} // 🔹 อัพเดต Swiper ทันที
+        breakpoints={{
+          640: { slidesPerView: 1.3, slidesPerGroup: 1.3 },  // tablet
+          768: { slidesPerView: 1.5, slidesPerGroup: 1.5 },  // desktop
+          1024: { slidesPerView: 1.7, slidesPerGroup: 1.7 }, // large
+          1280: { slidesPerView: 1.9, slidesPerGroup: 1.9 }, // extra large
+        }}
+      >
+        {cards.map((card, index) => (
+          <SwiperSlide key={index} className="w-auto">
+            <Card
+              title={card.title}
+              description={card.description}
+              image={card.image}
+            />
+          </SwiperSlide>
+        ))}
+
+        {/* Swiper Navigation Buttons */}
+        <div className="swiper-button-prev text-white/80 hover:text-white"></div>
+        <div className="swiper-button-next text-white/80 hover:text-white"></div>
+      </Swiper>
+    </div>
+  );
+}
