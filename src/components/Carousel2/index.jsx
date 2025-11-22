@@ -8,7 +8,7 @@ import 'swiper/css/navigation';
 
 export default function CardCarousel({ cards }) {
   return (
-    <div className="w-full py-2 px-0 bg-gray-100">
+    <div className="w-full py-2 px-0">
       <Swiper
         spaceBetween={8}
         slidesPerView= {1.7}      // มือถือ
