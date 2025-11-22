@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Main from "./pages/Main";
+import InsertProduct from "./pages/InsertProduct";
 import PrivateRoute from "./components/PrivateRoute";
 import Navbar from "./components/Navbar";
 
@@ -26,7 +27,18 @@ function App() {
           }
         />
 
-        {/* redirect / ไป login */}
+        {/* หน้า InsertProduct ต้อง login ก่อน */}
+        <Route
+          path="/insert-product"
+          element={
+            <PrivateRoute>
+              <Navbar />
+              <InsertProduct />
+            </PrivateRoute>
+          }
+        />
+
+        {/* redirect / ไป /main */}
         <Route path="/" element={<Navigate to="/main" replace />} />
       </Routes>
     </Router>
