@@ -1,15 +1,17 @@
-
-
-import React from 'react';
-import Navbar from './components/Navbar';
-import Main from './pages/Main';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Main from "./pages/Main";
+import InsertProduct from "./components/InsertProduct_botton";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
-    <>
-      <Navbar /> 
-      <Main />
-    </>
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Main />} />
+        <Route path="/insert-product" element={<InsertProduct />} />
+      </Routes>
+    </Router>
   );
 }
 
