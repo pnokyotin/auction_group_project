@@ -26,11 +26,12 @@ export default function Main() {
           Welcome to Main Page
         </h1>
         <Search />
+        <InsertProductB />
         <Carousel2 cards={cards} />
         <Carousel cards={cards} />
         <Carousel3 cards={cards} />
 
-        <InsertProductB />
+      
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ export default function Card({ title, description, image }) {
         <img
           src={image}
           alt={title}
-          className="w-full h-32 object-cover"
+          className="w-full h-60 object-cover"
         />
       )}
 
