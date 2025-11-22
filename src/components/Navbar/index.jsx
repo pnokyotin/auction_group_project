@@ -6,7 +6,7 @@ import LogoImage from '../../assets/images/logo.png';
 
 export default function Navbar() {
   return (
-    <nav className="bg-neutral-primary fixed w-full z-20 top-0 start-0 border-b border-default">
+    <nav className="bg-white fixed w-full z-20 top-0 start-0 border-b border-gray-200 shadow-sm">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         
         {/* Logo */}

@@ -20,16 +20,16 @@ export default function Main() {
   if (error) return <p>เกิดข้อผิดพลาด: {error}</p>;
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1344px] bg-blue-300 ">
-      <div className="flex flex-col gap-8 p-4 sm:p-6 md:p-8 min-h-80 justify-center items-center bg-red-500">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mt-20 bg-green-300">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1344px]  ">
+      <div className="flex flex-col gap-8 p-4 sm:p-6 md:p-8 min-h-80 justify-center items-center">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mt-20 ">
           Welcome to Main Page
         </h1>
         <Search />
         <Carousel2 cards={cards} />
         <Carousel cards={cards} />
         <Carousel3 cards={cards} />
-        
+
         <InsertProductB />
       </div>
     </div>
