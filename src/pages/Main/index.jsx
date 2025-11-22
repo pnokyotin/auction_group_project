@@ -29,6 +29,7 @@ export default function Main() {
         <Carousel2 cards={cards} />
         <Carousel cards={cards} />
         <Carousel3 cards={cards} />
+        
         <InsertProductB />
       </div>
     </div>

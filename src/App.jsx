@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Main from "./pages/Main";
-import InsertProduct from "./components/InsertProduct_botton";
+import InsertProduct from "./pages/InsertProduct";
 import Navbar from "./components/Navbar";
 
 function App() {
