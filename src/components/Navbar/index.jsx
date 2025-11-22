@@ -1,7 +1,7 @@
 import React from "react";
 import { UserCircleIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
 import LogoImage from '../../assets/images/logo.png';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import useDropdown from '../../hooks/useDropdown';
 
 export default function Navbar() {
@@ -16,11 +16,27 @@ export default function Navbar() {
   return (
     <nav className="backdrop-blur-md bg-white/10 fixed w-full z-20 top-0 border-b border-white/20 shadow-lg">
       <div className="max-w-screen-xl flex justify-between items-center mx-auto p-4">
+
+        {/* Logo */}
         <a href="/" className="flex items-center space-x-3">
           <img src={LogoImage} className="h-12" alt="Logo" />
           <span className="text-xl text-white font-semibold">Pramoon</span>
         </a>
 
+        {/* Navigation Links */}
+        <ul className="hidden md:flex space-x-8 text-white font-medium">
+          <li>
+            <Link to="/" className="hover:text-[#3BACE2]">หน้าแรก</Link>
+          </li>
+          <li>
+            <Link to="/history" className="hover:text-[#3BACE2]">ประวัติ</Link>
+          </li>
+          <li>
+            <Link to="/contact" className="hover:text-[#3BACE2]">ติดต่อ-สอบถาม</Link>
+          </li>
+        </ul>
+
+        {/* Right side: Cart + User */}
         <div className="flex items-center space-x-3">
           <button className="relative p-2 rounded-full hover:bg-white/20">
             <ShoppingCartIcon className="w-6 h-6 text-white" />
@@ -40,9 +56,7 @@ export default function Navbar() {
               `}
             >
               <ul className="p-2 text-sm font-medium space-y-1">
-                <li><a href="#" className="block w-full p-2 rounded hover:bg-white/20">Dashboard</a></li>
-                <li><a href="#" className="block w-full p-2 rounded hover:bg-white/20">Settings</a></li>
-                <li><a href="#" className="block w-full p-2 rounded hover:bg-white/20">Earnings</a></li>
+                <li><a href="#" className="block w-full p-2 rounded hover:bg-white/20">Profile</a></li>
                 <li>
                   <button
                     onClick={handleLogout}
@@ -55,6 +69,7 @@ export default function Navbar() {
             </div>
           </div>
         </div>
+
       </div>
     </nav>
   );
