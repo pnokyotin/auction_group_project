@@ -5,7 +5,7 @@ export default function InsertProduct() {
     product_detail: "",
     starting_price: "",
     bid_increment: "",
-    approval: 0,
+    approval: 0, // default เป็น 0
     note: "",
     warehouse_id: "",
     supplier_id: "",
@@ -34,7 +34,12 @@ export default function InsertProduct() {
 
     try {
       const data = new FormData();
-      Object.keys(form).forEach((key) => data.append(key, form[key]));
+
+      // แปลง empty string เป็น null
+      Object.keys(form).forEach((key) => {
+        data.append(key, form[key] === "" ? null : form[key]);
+      });
+
       data.append("image", imageFile);
 
       const response = await fetch("http://localhost:5000/api/products", {
@@ -48,7 +53,7 @@ export default function InsertProduct() {
           product_detail: "",
           starting_price: "",
           bid_increment: "",
-          approval: 0,
+          approval: 0, // reset เป็น 0
           note: "",
           warehouse_id: "",
           supplier_id: "",
@@ -67,7 +72,7 @@ export default function InsertProduct() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-50 p-6 bg-white rounded shadow-md">
+    <div className="max-w-md mx-auto mt-40 p-6 bg-white rounded shadow-md">
       <h2 className="text-2xl font-bold mb-4">เพิ่มสินค้าใหม่</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
@@ -97,16 +102,9 @@ export default function InsertProduct() {
           className="w-full border p-2 rounded"
           required
         />
-        <input
-          type="number"
-          name="approval"
-          value={form.approval}
-          onChange={handleChange}
-          placeholder="อนุมัติ (0/1)"
-          min="0"
-          max="1"
-          className="w-full border p-2 rounded"
-        />
+        {/* ซ่อน approval input เพราะ default เป็น 0 */}
+        <input type="hidden" name="approval" value={form.approval} />
+
         <input
           type="text"
           name="note"

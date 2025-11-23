@@ -1,6 +1,7 @@
-export default function SearchBoxSmall() {
+// src/components/form/search/search_box.jsx
+export default function SearchBox({ value, onChange }) {
   return (
-    <div className="w-full max-w-2xl mx-auto mt-10 px-2">
+    <div className="w-full max-w-2xl mx-auto mt-4 px-2">
       <label htmlFor="search" className="sr-only">
         Search
       </label>
@@ -28,16 +29,10 @@ export default function SearchBoxSmall() {
           type="text"
           id="search"
           placeholder="Search..."
-          className="block w-full pl-8 pr-20 py-2 text-sm text-white placeholder-white/70 bg-white/10 border border-white/30 rounded-md backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-[#3BACE2] focus:border-[#B936EE]"
+          value={value}
+          onChange={onChange}
+          className="block w-full pl-8 pr-2 py-2 text-sm text-white placeholder-white/70 bg-white/10 border border-white/30 rounded-md backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-[#3BACE2] focus:border-[#B936EE]"
         />
-
-        {/* Button */}
-        <button
-          type="button"
-          className="absolute right-1 top-1/2 transform -translate-y-1/2 px-3 py-1 bg-gradient-to-r from-[#B936EE] via-[#3BACE2] to-[#FF56F6] text-white rounded-md text-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#FF56F6]"
-        >
-          Search
-        </button>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import Card from '../../Card';
+import Card from '../../Card/card_product';
 import { Navigation } from 'swiper/modules';
 
 export default function CardCarousel({ cards }) {

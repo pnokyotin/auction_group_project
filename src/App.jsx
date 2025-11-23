@@ -1,22 +1,28 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import Login from "./pages/Login";
+import Login from "./pages/Login/C_login";
+import E_login from "./pages/Login/E_login";
 import Register from "./pages/Register";
 import Main from "./pages/Main";
 import InsertProduct from "./pages/InsertProduct";
+import EmployeeDashboard from "./pages/EmployeeDashboard";
 import PrivateRoute from "./components/PrivateRoute";
+import PrivateRouteEmployee from "./components/PrivateRouteEmployee";
 import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* หน้า Login */}
-        <Route path="/login" element={<Login />} />
+        {/* หน้า Login Customer */}
+        <Route path="/login" element={<Login />} />   
+
+        {/* หน้า Login Employee */}
+        <Route path="/employee-login" element={<E_login />} />
 
         {/* หน้า Register */}
         <Route path="/register" element={<Register />} />
 
-        {/* หน้า Main ต้อง login ก่อน */}
+        {/* หน้า Main ของ customer ต้อง login ก่อน */}
         <Route
           path="/main"
           element={
@@ -27,7 +33,7 @@ function App() {
           }
         />
 
-        {/* หน้า InsertProduct ต้อง login ก่อน */}
+        {/* หน้า InsertProduct ของ customer ต้อง login ก่อน */}
         <Route
           path="/insert-product"
           element={
@@ -35,6 +41,16 @@ function App() {
               <Navbar />
               <InsertProduct />
             </PrivateRoute>
+          }
+        />
+
+        {/* หน้า Employee Dashboard ต้อง login ก่อน */}
+        <Route
+          path="/employee-dashboard"
+          element={
+            <PrivateRouteEmployee>
+              <EmployeeDashboard />
+            </PrivateRouteEmployee>
           }
         />
 
