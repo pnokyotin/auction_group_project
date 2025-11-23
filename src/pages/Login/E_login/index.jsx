@@ -14,7 +14,7 @@ export default function EmployeeLogin() {
     },
     async (formData) => {
       // เรียก API สำหรับ Employee login
-      const res = await fetch("http://localhost:5000/login/employee", {
+      const res = await fetch("http://localhost:5000/api/employee/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
