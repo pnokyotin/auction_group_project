@@ -1,3 +1,4 @@
+// src/components/Carousel/Carousel2.jsx
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -9,24 +10,22 @@ export default function CardCarousel({ cards }) {
     <div className="w-full py-4 px-2 bg-white/10 backdrop-blur-md rounded-lg">
       <Swiper
         spaceBetween={8}
-        slidesPerView= {1.3}     // มือถือ    
+        slidesPerView={1.3}    // มือถือ
         grabCursor={true}
         modules={[Navigation]}
         navigation={{
           nextEl: '.swiper-button-next',
           prevEl: '.swiper-button-prev',
         }}
-        observer={true}          // 🔹 ตรวจจับ container size
-        observeParents={true}    // 🔹 ตรวจสอบ parent container ด้วย
+        observer={true}        // 🔹 ตรวจจับ container size
+        observeParents={true}  // 🔹 ตรวจสอบ parent container ด้วย
         onSwiper={(swiper) => swiper.update()} // 🔹 อัพเดต Swiper ทันที
         breakpoints={{
-          640: { slidesPerView: 1.8, slidesPerGroup: 1.8 },  // tablet
-          768: { slidesPerView: 2, slidesPerGroup: 2 },  // desktop
-          1024: { slidesPerView: 2.2, slidesPerGroup: 2.2 }, // large
-          1280: { slidesPerView: 2.4, slidesPerGroup: 2.4 }, // extra large
+          640: { slidesPerView: 1.8, slidesPerGroup: 1 },  // tablet
+          768: { slidesPerView: 2, slidesPerGroup: 2 },    // desktop
+          1024: { slidesPerView: 2.2, slidesPerGroup: 2 }, // large
+          1280: { slidesPerView: 2.4, slidesPerGroup: 2 }, // extra large
         }}
-
-
       >
         {cards.map((card, index) => (
           <SwiperSlide key={index} className="w-auto">

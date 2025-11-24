@@ -14,6 +14,21 @@ export default function EmployeeDashboard() {
   const [filterRoom, setFilterRoom] = useState("");
   const [filterApproval, setFilterApproval] = useState("");
   const [localProducts, setLocalProducts] = useState([]);
+  const [warehouses, setWarehouses] = useState([]);
+  const [rooms, setRooms] = useState([]);
+
+  // Fetch warehouses & rooms
+  useEffect(() => {
+    fetch("http://localhost:5000/api/warehouses")
+      .then((res) => res.json())
+      .then((data) => setWarehouses(data.warehouses))
+      .catch((err) => console.error(err));
+
+    fetch("http://localhost:5000/api/rooms")
+      .then((res) => res.json())
+      .then((data) => setRooms(data.rooms))
+      .catch((err) => console.error(err));
+  }, []);
 
   // Sync products
   useEffect(() => {
@@ -25,23 +40,28 @@ export default function EmployeeDashboard() {
     navigate("/employee-login");
   };
 
+  // Filter products
   const filteredProducts = localProducts.filter((product) => {
+    const warehouseName = warehouses.find(w => w.warehouse_id === product.warehouse_id)?.warehouse_name || "No warehouse";
+    const roomName = rooms.find(r => r.room_id === product.room_id)?.room_name || "None";
+
     return (
       product.product_detail.toLowerCase().includes(search.toLowerCase()) &&
-      (filterWarehouse === "" || product.warehouse_id == filterWarehouse) &&
-      (filterRoom === "" || (product.room_id || "None") == filterRoom) &&
+      (filterWarehouse === "" || warehouseName === filterWarehouse) &&
+      (filterRoom === "" || roomName === filterRoom) &&
       (filterApproval === "" || product.approval == filterApproval)
     );
   });
 
-  const warehouseOptions = [...new Set(localProducts.map((p) => p.warehouse_id))];
-  const roomOptions = [...new Set(localProducts.map((p) => p.room_id || "None"))];
+  // Get filter options
+  const warehouseOptions = ["No warehouse", ...warehouses.map(w => w.warehouse_name)];
+  const roomOptions = ["None", ...rooms.map(r => r.room_name)];
 
   return (
     <EmployeeLayout title="Employee Dashboard">
       <p className="text-white/80 text-lg mb-6">Welcome, employee!</p>
 
-      {/* Search & Filter */}
+      {/* Search & Filters */}
       <div className="flex flex-col sm:flex-row gap-2 mb-4">
         <input
           type="text"
@@ -56,8 +76,8 @@ export default function EmployeeDashboard() {
           className="p-2 rounded text-black"
         >
           <option value="">All Warehouses</option>
-          {warehouseOptions.map((w) => (
-            <option key={w} value={w}>{w}</option>
+          {warehouseOptions.map((w, i) => (
+            <option key={i} value={w}>{w}</option>
           ))}
         </select>
         <select
@@ -66,8 +86,8 @@ export default function EmployeeDashboard() {
           className="p-2 rounded text-black"
         >
           <option value="">All Rooms</option>
-          {roomOptions.map((r) => (
-            <option key={r} value={r}>{r}</option>
+          {roomOptions.map((r, i) => (
+            <option key={i} value={r}>{r}</option>
           ))}
         </select>
         <select
@@ -81,13 +101,24 @@ export default function EmployeeDashboard() {
         </select>
       </div>
 
-      {loading && <p className="text-white">Loading products...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-      {!loading && !error && filteredProducts.length === 0 && (
-        <p className="text-white">No products found.</p>
-      )}
+      {/* Manage buttons */}
+      <div className="mb-6 flex gap-2">
+        <button
+          onClick={() => navigate("/manage-room")}
+          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition"
+        >
+          Manage Room
+        </button>
 
-      {/* ตารางสินค้า */}
+        <button
+          onClick={() => navigate("/manage-product")}
+          className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded transition"
+        >
+          Manage Product
+        </button>
+      </div>
+
+      {/* Products Table */}
       {!loading && !error && filteredProducts.length > 0 && (
         <div className="overflow-x-auto rounded-lg">
           <table className="min-w-full bg-white/10 backdrop-blur-md rounded-lg text-left">
@@ -102,39 +133,47 @@ export default function EmployeeDashboard() {
               </tr>
             </thead>
             <tbody>
-              {filteredProducts.map((product) => (
-                <tr
-                  key={product.product_id}
-                  className="text-white border-b border-white/20 hover:bg-white/10 transition"
-                >
-                  <td className="px-4 py-2">{product.product_detail}</td>
-                  <td className="px-4 py-2">${product.starting_price}</td>
-                  <td className="px-4 py-2">${product.bid_increment}</td>
-                  <td className="px-4 py-2">{product.room_id || "None"}</td>
-                  <td className="px-4 py-2">{product.warehouse_id}</td>
-                  <td className="px-4 py-2 flex items-center gap-2">
-                    {product.approval == 1 ? (
-                      <span>Approved</span>
-                    ) : (
-                      <ApproveButton
-                        productId={product.product_id}
-                        onApproved={() =>
-                          setLocalProducts((prev) =>
-                            prev.map((p) =>
-                              p.product_id === product.product_id
-                                ? { ...p, approval: 1 }
-                                : p
+              {filteredProducts.map((product) => {
+                const warehouseName = warehouses.find(w => w.warehouse_id === product.warehouse_id)?.warehouse_name || "No warehouse";
+                const roomName = rooms.find(r => r.room_id === product.room_id)?.room_name || "None";
+
+                return (
+                  <tr key={product.product_id} className="text-white border-b border-white/20 hover:bg-white/10 transition">
+                    <td className="px-4 py-2">{product.product_detail}</td>
+                    <td className="px-4 py-2">${product.starting_price}</td>
+                    <td className="px-4 py-2">${product.bid_increment}</td>
+                    <td className="px-4 py-2">{roomName}</td>
+                    <td className="px-4 py-2">{warehouseName}</td>
+                    <td className="px-4 py-2 flex flex-col gap-1">
+                      {product.approval == 1 ? (
+                        <span>Approved</span>
+                      ) : (
+                        <ApproveButton
+                          productId={product.product_id}
+                          onApproved={() =>
+                            setLocalProducts((prev) =>
+                              prev.map((p) =>
+                                p.product_id === product.product_id
+                                  ? { ...p, approval: 1 }
+                                  : p
+                              )
                             )
-                          )
-                        }
-                      />
-                    )}
-                  </td>
-                </tr>
-              ))}
+                          }
+                        />
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
+      )}
+
+      {loading && <p className="text-white">Loading products...</p>}
+      {error && <p className="text-red-500">{error}</p>}
+      {!loading && !error && filteredProducts.length === 0 && (
+        <p className="text-white">No products found.</p>
       )}
 
       {/* Logout */}
