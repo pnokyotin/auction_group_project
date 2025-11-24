@@ -5,6 +5,8 @@ import logoImage from "../../../assets/images/logo.png";
 import useForm from "../../../hooks/useForm";
 import AuthLayout from "../../../layouts/AuthLayout";
 
+
+{/* node : เดี้ยวต้อง รวม customer ,employees และ admin อยู่ใน table เดียวกัน */}
 export default function Login() {
   const navigate = useNavigate();
 
