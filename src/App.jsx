@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import Login from "./pages/Login/C_login";
+import Login from "./pages/Login/User_login";
 import E_login from "./pages/Login/E_login";
 import Register from "./pages/Register";
 import Main from "./pages/Main";

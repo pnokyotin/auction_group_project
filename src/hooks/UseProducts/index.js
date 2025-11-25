@@ -1,4 +1,3 @@
-// src/hooks/UseProducts/index.js
 import { useState, useEffect } from "react";
 
 export default function useProducts() {
@@ -7,21 +6,18 @@ export default function useProducts() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    async function fetchProducts() {
       try {
         const res = await fetch("http://localhost:5000/api/products");
         if (!res.ok) throw new Error("Failed to fetch products");
         const data = await res.json();
-
-        // ไม่ต้องต่อ BASE_URL ที่นี่
         setProducts(data);
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
-    };
-
+    }
     fetchProducts();
   }, []);
 

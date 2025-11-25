@@ -1,49 +1,75 @@
 // src/pages/EmployeeDashboard/index.jsx
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+
 import useProducts from "../../hooks/UseProducts";
-import ApproveButton from "../../components/button/ApproveButton";
+import useWarehouses from "../../hooks/useWarehouses";
+import useRooms from "../../hooks/useRooms";
+
 import EmployeeLayout from "../../layouts/EmployeeLayout";
+import ProductFilters from "../../components/ProductFilters";
+import ProductTable from "../../components/ProductTable";
 
 export default function EmployeeDashboard() {
   const navigate = useNavigate();
-  const { products, loading, error } = useProducts();
 
+  const { products, loading, error } = useProducts();
+  const warehouses = useWarehouses();
+  const rooms = useRooms();
+
+  const [localProducts, setLocalProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [filterWarehouse, setFilterWarehouse] = useState("");
   const [filterRoom, setFilterRoom] = useState("");
   const [filterApproval, setFilterApproval] = useState("");
-  const [localProducts, setLocalProducts] = useState([]);
-  const [warehouses, setWarehouses] = useState([]);
-  const [rooms, setRooms] = useState([]);
 
-  // Fetch warehouses & rooms
-  useEffect(() => {
-    fetch("http://localhost:5000/api/warehouses")
-      .then((res) => res.json())
-      .then((data) => setWarehouses(data.warehouses))
-      .catch((err) => console.error(err));
-
-    fetch("http://localhost:5000/api/rooms")
-      .then((res) => res.json())
-      .then((data) => setRooms(data.rooms))
-      .catch((err) => console.error(err));
-  }, []);
-
-  // Sync products
   useEffect(() => {
     setLocalProducts(products);
   }, [products]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("employeeToken");
-    navigate("/employee-login");
+  const handleApprove = async (productId) => {
+    try {
+      const token = localStorage.getItem("employeeToken");
+      if (!token) throw new Error("Not authenticated");
+
+      const res = await fetch(`http://localhost:5000/api/products/approve/${productId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ approval: 1 })
+      });
+
+      if (!res.ok) {
+        console.error("Server response:", await res.text());
+        return;
+      }
+
+      const data = await res.json();
+      if (data.success) {
+        setLocalProducts((prev) =>
+          prev.map((p) =>
+            p.product_id === productId ? { ...p, approval: 1 } : p
+          )
+        );
+      } else {
+        console.error("Approve failed:", data.message);
+      }
+    } catch (err) {
+      console.error("Error approving product:", err);
+    }
   };
 
-  // Filter products
+  // Filter logic
   const filteredProducts = localProducts.filter((product) => {
-    const warehouseName = warehouses.find(w => w.warehouse_id === product.warehouse_id)?.warehouse_name || "No warehouse";
-    const roomName = rooms.find(r => r.room_id === product.room_id)?.room_name || "None";
+    const warehouseName =
+      warehouses.find((w) => w.warehouse_id === product.warehouse_id)?.warehouse_name ||
+      "No warehouse";
+
+    const roomName =
+      rooms.find((r) => r.room_id === product.room_id)?.room_name ||
+      "None";
 
     return (
       product.product_detail.toLowerCase().includes(search.toLowerCase()) &&
@@ -53,136 +79,77 @@ export default function EmployeeDashboard() {
     );
   });
 
-  // Get filter options
-  const warehouseOptions = ["No warehouse", ...warehouses.map(w => w.warehouse_name)];
-  const roomOptions = ["None", ...rooms.map(r => r.room_name)];
+  const warehouseOptions = ["No warehouse", ...warehouses.map((w) => w.warehouse_name)];
+  const roomOptions = ["None", ...rooms.map((r) => r.room_name)];
 
   return (
     <EmployeeLayout title="Employee Dashboard">
-      <p className="text-white/80 text-lg mb-6">Welcome, employee!</p>
-
-      {/* Search & Filters */}
-      <div className="flex flex-col sm:flex-row gap-2 mb-4">
-        <input
-          type="text"
-          placeholder="Search products..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="p-2 rounded text-black flex-1"
-        />
-        <select
-          value={filterWarehouse}
-          onChange={(e) => setFilterWarehouse(e.target.value)}
-          className="p-2 rounded text-black"
-        >
-          <option value="">All Warehouses</option>
-          {warehouseOptions.map((w, i) => (
-            <option key={i} value={w}>{w}</option>
-          ))}
-        </select>
-        <select
-          value={filterRoom}
-          onChange={(e) => setFilterRoom(e.target.value)}
-          className="p-2 rounded text-black"
-        >
-          <option value="">All Rooms</option>
-          {roomOptions.map((r, i) => (
-            <option key={i} value={r}>{r}</option>
-          ))}
-        </select>
-        <select
-          value={filterApproval}
-          onChange={(e) => setFilterApproval(e.target.value)}
-          className="p-2 rounded text-black"
-        >
-          <option value="">All Approval</option>
-          <option value="0">Not Approved</option>
-          <option value="1">Approved</option>
-        </select>
+      {/* ========= Page Header ========= */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-white">Employee Dashboard</h1>
+        <p className="text-white/60 mt-1">Manage rooms, products and approvals</p>
       </div>
 
-      {/* Manage buttons */}
-      <div className="mb-6 flex gap-2">
+      {/* ========= Action Buttons ========= */}
+      <div className="bg-white/10 p-4 w-full rounded-lg mb-6 flex gap-3 backdrop-blur-md">
         <button
           onClick={() => navigate("/manage-room")}
-          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition"
+          className="bg-blue-500 text-white px-4 py-2 rounded"
         >
           Manage Room
         </button>
 
         <button
           onClick={() => navigate("/manage-product")}
-          className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded transition"
+          className="bg-green-500 text-white px-4 py-2 rounded"
         >
           Manage Product
         </button>
       </div>
 
-      {/* Products Table */}
-      {!loading && !error && filteredProducts.length > 0 && (
-        <div className="overflow-x-auto rounded-lg">
-          <table className="min-w-full bg-white/10 backdrop-blur-md rounded-lg text-left">
-            <thead>
-              <tr className="text-white border-b border-white/30">
-                <th className="px-4 py-2">Product</th>
-                <th className="px-4 py-2">Start Price</th>
-                <th className="px-4 py-2">Bid Increment</th>
-                <th className="px-4 py-2">Room</th>
-                <th className="px-4 py-2">Warehouse</th>
-                <th className="px-4 py-2">Approval</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredProducts.map((product) => {
-                const warehouseName = warehouses.find(w => w.warehouse_id === product.warehouse_id)?.warehouse_name || "No warehouse";
-                const roomName = rooms.find(r => r.room_id === product.room_id)?.room_name || "None";
+      {/* ========= Filter Section ========= */}
+      <div className="bg-white/10 px-2 rounded-lg mb-2 backdrop-blur-md">
+        <ProductFilters
+          search={search} setSearch={setSearch}
+          filterWarehouse={filterWarehouse} setFilterWarehouse={setFilterWarehouse}
+          filterRoom={filterRoom} setFilterRoom={setFilterRoom}
+          filterApproval={filterApproval} setFilterApproval={setFilterApproval}
+          warehouseOptions={warehouseOptions}
+          roomOptions={roomOptions}
+        />
+      </div>
 
-                return (
-                  <tr key={product.product_id} className="text-white border-b border-white/20 hover:bg-white/10 transition">
-                    <td className="px-4 py-2">{product.product_detail}</td>
-                    <td className="px-4 py-2">${product.starting_price}</td>
-                    <td className="px-4 py-2">${product.bid_increment}</td>
-                    <td className="px-4 py-2">{roomName}</td>
-                    <td className="px-4 py-2">{warehouseName}</td>
-                    <td className="px-4 py-2 flex flex-col gap-1">
-                      {product.approval == 1 ? (
-                        <span>Approved</span>
-                      ) : (
-                        <ApproveButton
-                          productId={product.product_id}
-                          onApproved={() =>
-                            setLocalProducts((prev) =>
-                              prev.map((p) =>
-                                p.product_id === product.product_id
-                                  ? { ...p, approval: 1 }
-                                  : p
-                              )
-                            )
-                          }
-                        />
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
+      {/* ========= Table Section ========= */}
+      <div className="bg-white/5 p-4 rounded-lg backdrop-blur-md">
+        {!loading && !error && filteredProducts.length > 0 && (
+          <ProductTable
+            products={filteredProducts}
+            warehouses={warehouses}
+            rooms={rooms}
+            onApprove={handleApprove} // ส่งฟังก์ชัน handleApprove
+          />
+        )}
 
-      {loading && <p className="text-white">Loading products...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-      {!loading && !error && filteredProducts.length === 0 && (
-        <p className="text-white">No products found.</p>
-      )}
+        {loading && <p className="text-white">Loading products...</p>}
+        {error && <p className="text-red-500">{error}</p>}
 
-      {/* Logout */}
-      <button
-        onClick={handleLogout}
-        className="mt-6 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded transition"
-      >
-        Logout
-      </button>
+        {!loading && !error && filteredProducts.length === 0 && (
+          <p className="text-white">No products found.</p>
+        )}
+      </div>
+
+      {/* ========= Logout ========= */}
+      <div className="mt-6">
+        <button
+          onClick={() => {
+            localStorage.removeItem("employeeToken");
+            navigate("/employee-login");
+          }}
+          className="bg-red-500 text-white px-4 py-2 rounded"
+        >
+          Logout
+        </button>
+      </div>
     </EmployeeLayout>
   );
 }

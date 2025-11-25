@@ -1,21 +1,22 @@
+import MainLayout from "../../layouts/MainLayout";
+import useProducts from "../../hooks/UseProducts";
+import Carousel1 from "../../components/Carousel/Carousel1";
+import Carousel2 from "../../components/Carousel/Carousel2";
+import Carousel3 from "../../components/Carousel/Carousel3";
+import InsertProductB from "../../components/button/InsertProduct_botton";
+import { useState } from "react";
 import Search from "../../components/form/search/search_box";
 import SearchResults from "../../components/form/search/search_result";
-import Carousel1 from '../../components/Carousel/Carousel1';
-import Carousel2 from '../../components/Carousel/Carousel2';
-import Carousel3 from '../../components/Carousel/Carousel3';
-import InsertProductB from "../../components/button/InsertProduct_botton";  
-import useProducts from '../../hooks/UseProducts';
-import useSearchProducts from '../../hooks/useSearchProducts';
-import MainLayout from "../../layouts/MainLayout";
+import useSearchProducts from "../../hooks/useSearchProducts";
 
 export default function Main() {
   const { products, loading, error } = useProducts();
   const { searchTerm, setSearchTerm, filteredProducts } = useSearchProducts(products);
 
-  const cards = products.map((p) => ({
+  const cards = products.map(p => ({
     title: p.product_detail,
     description: `ราคาเริ่มต้น: ${p.starting_price} บาท`,
-    image: p.image_url ? `http://localhost:5000/${p.image_url}` : "https://via.placeholder.com/150",
+    image: p.image_url || "https://via.placeholder.com/150"
   }));
 
   if (loading) return <p>กำลังโหลดสินค้าจาก server...</p>;
@@ -28,10 +29,7 @@ export default function Main() {
           Welcome to Main Page
         </h1>
 
-        {/* Search box */}
-        <Search value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-
-        {/* ผลลัพธ์ search */}
+        <Search value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
         <SearchResults filteredProducts={filteredProducts} />
 
         <InsertProductB />

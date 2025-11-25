@@ -14,7 +14,6 @@ export default function useForm(initialValues, onSubmit) {
     setLoading(true);
     setError(null);
     try {
-      console.log("Form data:", values);
       await onSubmit(values);
     } catch (err) {
       setError(err.message || "Something went wrong");
