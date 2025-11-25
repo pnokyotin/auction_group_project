@@ -1,4 +1,3 @@
-// src/pages/InsertProduct/index.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FormLayout from "../../layouts/FormLayout";
@@ -6,9 +5,10 @@ import FormLayout from "../../layouts/FormLayout";
 export default function InsertProduct() {
   const navigate = useNavigate();
 
-  // state ของ form (เอา warehouse_id ออก)
   const [form, setForm] = useState({
+    product_name: "",
     product_detail: "",
+    tracking_number: "",
     starting_price: "",
     bid_increment: "",
     approval: 0,
@@ -27,7 +27,6 @@ export default function InsertProduct() {
     e.preventDefault();
     if (!imageFile) return alert("กรุณาเลือกไฟล์รูปสินค้า");
 
-    // ดึง customer_id จาก localStorage
     const user_id = localStorage.getItem("user_id");
     if (!user_id) return alert("ไม่พบ customer_id กรุณา login ใหม่");
 
@@ -35,15 +34,18 @@ export default function InsertProduct() {
     try {
       const data = new FormData();
 
-      // ใส่ field จาก form
-      Object.keys(form).forEach((key) => {
-        data.append(key, form[key]);
+      // แปลงค่า number ก่อนส่ง
+      const formData = {
+        ...form,
+        starting_price: form.starting_price ? Number(form.starting_price) : 0,
+        bid_increment: form.bid_increment ? Number(form.bid_increment) : 0,
+      };
+
+      Object.keys(formData).forEach((key) => {
+        data.append(key, formData[key]);
       });
 
-      // ใส่รูปสินค้า
       data.append("image", imageFile);
-
-      // ส่ง user_id ให้ backend
       data.append("user_id", user_id);
 
       const res = await fetch("http://localhost:5000/api/products", {
@@ -54,15 +56,16 @@ export default function InsertProduct() {
       if (res.ok) {
         alert("เพิ่มสินค้าเรียบร้อย!");
         setForm({
+          product_name: "",
           product_detail: "",
+          tracking_number: "",
           starting_price: "",
           bid_increment: "",
           approval: 0,
           note: "",
         });
         setImageFile(null);
-
-        navigate("/main"); // เพิ่มสินค้าเรียบร้อย → กลับหน้า main
+        navigate("/main");
       } else {
         const resData = await res.json();
         alert("เกิดข้อผิดพลาด: " + resData.message);
@@ -71,13 +74,21 @@ export default function InsertProduct() {
       console.error(err);
       alert("เกิดข้อผิดพลาดในการเชื่อมต่อ API");
     }
-
     setLoading(false);
   };
 
   return (
     <FormLayout title="เพิ่มสินค้าใหม่">
       <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="text"
+          name="product_name"
+          value={form.product_name}
+          onChange={handleChange}
+          placeholder="ชื่อสินค้า"
+          className="w-full border p-2 rounded"
+          required
+        />
         <input
           type="text"
           name="product_detail"
@@ -87,9 +98,17 @@ export default function InsertProduct() {
           className="w-full border p-2 rounded"
           required
         />
-
+        <input
+          type="text"
+          name="tracking_number"
+          value={form.tracking_number}
+          onChange={handleChange}
+          placeholder="เลขพัสดุ"
+          className="w-full border p-2 rounded"
+        />
         <input
           type="number"
+          step="0.01"
           name="starting_price"
           value={form.starting_price}
           onChange={handleChange}
@@ -97,9 +116,9 @@ export default function InsertProduct() {
           className="w-full border p-2 rounded"
           required
         />
-
         <input
           type="number"
+          step="0.01"
           name="bid_increment"
           value={form.bid_increment}
           onChange={handleChange}
@@ -107,9 +126,7 @@ export default function InsertProduct() {
           className="w-full border p-2 rounded"
           required
         />
-
         <input type="hidden" name="approval" value={form.approval} />
-
         <input
           type="text"
           name="note"
@@ -118,7 +135,6 @@ export default function InsertProduct() {
           placeholder="หมายเหตุ"
           className="w-full border p-2 rounded"
         />
-
         <input
           type="file"
           accept="image/*"
@@ -126,7 +142,6 @@ export default function InsertProduct() {
           className="w-full border p-2 rounded"
           required
         />
-
         <button
           type="submit"
           disabled={loading}

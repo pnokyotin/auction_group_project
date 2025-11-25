@@ -1,7 +1,6 @@
 // src/App.jsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login/User_login";
-import E_login from "./pages/Login/E_login";
 import Register from "./pages/Register";
 import Main from "./pages/Main";
 import InsertProduct from "./pages/InsertProduct";
@@ -18,8 +17,6 @@ function App() {
         {/* หน้า Login Customer */}
         <Route path="/login" element={<Login />} />
 
-        {/* หน้า Login Employee */}
-        <Route path="/employee-login" element={<E_login />} />
 
         {/* หน้า Register */}
         <Route path="/register" element={<Register />} />
