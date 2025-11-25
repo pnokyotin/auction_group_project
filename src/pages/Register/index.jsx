@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import InputField from "../../components/form/InputField";
 import Button from "../../components/button/Button_LR";
 import AuthLayout from "../../layouts/AuthLayout";
+import logoImage from "../../assets/images/logo.png";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ export default function Register() {
       <div className="hidden md:flex w-1/2 bg-white/20 items-center justify-center">
         {/* โลโก้ */}
         <img
-          src="/logo.png"
+          src={logoImage}
           alt="Logo"
           className="w-3/4 h-auto object-contain"
         />
